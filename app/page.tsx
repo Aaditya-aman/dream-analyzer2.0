@@ -1,7 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import Image from "next/image";
 import React, { useState, useRef, useEffect } from "react";
 import { DM_Serif_Display } from "next/font/google";
 
@@ -37,8 +34,12 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Unknown error");
       setResult(data.analysis);
-    } catch (err: any) {
-      setError(err.message || "Failed to analyze dream.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Failed to analyze dream.");
+      } else {
+        setError("Failed to analyze dream.");
+      }
     } finally {
       setLoading(false);
     }
